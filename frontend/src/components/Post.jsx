@@ -11,6 +11,10 @@ import axios from 'axios';
 import { authDataContext } from '../context/AuthContext';
 import { AiFillLike } from "react-icons/ai";
 import { LuSendHorizontal } from "react-icons/lu";
+import {io} from "socket.io-client"
+import ConnectionButton from './ConnectionButton';
+
+const socket=io("http://localhost:8000")
 
 function Post({id, author, like, comment, description, image, createdAt}) {
   const{userData}=useContext(userDataContext)
@@ -26,15 +30,11 @@ function Post({id, author, like, comment, description, image, createdAt}) {
   const liked=async()=>{
     try {
        const result=await axios.get(serverurl+`/api/v1/post/like/${id}`,{withCredentials:true})
-       const commentresult=await axios.post(serverurl+`/api/v1/post/comment/${id}`,{},{withCredentials:true})
-       console.log("comment result: ",commentresult)
        setLikes(result.data.data.like)
     } catch (error) {
       console.log(error);
     }
   }
-
-   console.log(comments)
 
    const commented=async(e)=>{
     e.preventDefault();
@@ -49,6 +49,26 @@ function Post({id, author, like, comment, description, image, createdAt}) {
       console.log(error);
     }
   }
+  
+  useEffect(()=>{
+    socket.on("likeUpdated",({postId, likes})=>{
+       if(postId==id){
+        setLikes(likes)
+       }
+    })
+
+    socket.on("commentEdit",({postId, comm})=>{
+       if(postId==id){
+        setComments(likes)
+       }
+    })
+
+    return()=>{
+     socket.off("likeUpdated")
+     socket.off("commentEdit")
+    }
+    
+  },[id])
   
    
   return (
@@ -73,14 +93,14 @@ function Post({id, author, like, comment, description, image, createdAt}) {
       </div>
 
       </div>
+      {
+       userData.data._id!=author._id && <ConnectionButton userId={author._id}/>
+      }
       
-      <div>
-        {/* button */}
-      </div>
     </div>
 
 
-
+     {/* Post description */}
      <div className='w-full pl-[10px] text-left flex flex-wrap items-start'>
      <div className={`transition-all duration-500 ease-in-out overflow-hidden ${
       more ? "max-h-[1000px]" : "max-h-[100px]"

@@ -86,7 +86,7 @@ function Home() {
   {/* Left sidebar */}
 <div className='w-full lg:w-[25%]  min-h-[400px] bg-white shadow-lg'>
   <div className='w-full h-[200px] bg-gray-400 rounded relative cursor-pointer' >
-    <img src={userData.data.coverImage || ""} alt="" className='w-full h-full object-cover object-center rounded'/>
+    <img src={userData.data.coverImage || dp} alt="" className='w-full h-full object-cover object-center rounded'/>
     {/* Camera icon at top-right of gray box */}
     <FaCamera className='absolute top-2 right-2 w-[32px] h-[32px] text-white cursor-pointer z-20' onClick={()=>setEdit(true)}/>
 

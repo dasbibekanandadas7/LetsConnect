@@ -4,6 +4,7 @@ import { apiResponse } from "../utils/apiresponse.js"
 import Post from "../models/post.models.js"
 import { uploadOnCloudinary } from "../utils/cloudinary.js"
 import User from "../models/user.models.js"
+import { io } from "../app.js"
 
 
 const createPost=asyncHandler(async(req,res)=>{
@@ -66,8 +67,11 @@ const like=asyncHandler(async(req,res)=>{
    else{
    post.like.push(userId)
    }
-   
-   await post.save(); //updated after change
+
+    await post.save(); //updated after change
+
+   io.emit("likeUpdated",{postId, likes:post.like})
+
    return res.status(200)
    .json(new apiResponse(200,post,"Like Successful"))
 })
@@ -92,7 +96,7 @@ const comment=asyncHandler(async(req,res)=>{
     .populate("author", "firstName lastName profileImage headline")
     .populate("comment.user", "firstname lastname profileImage headline")
     
-  
+    io.emit("commentEdit",{postId, comm:post.comment})
     console.log(post)
     
     if(!postComment){

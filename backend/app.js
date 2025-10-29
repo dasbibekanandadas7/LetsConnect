@@ -6,8 +6,19 @@ import userRouter from "./routes/user.routes.js";
 import postRouter from "./routes/post.routes.js";
 import connectionRouter from "./routes/connection.routes.js";
 
-
 const app=express();
+
+import http from "http"
+import { Server } from "socket.io";
+const server=http.createServer(app)
+
+const io=new Server(server,{
+  cors: ({
+    origin: "http://localhost:5173",
+    credentials: true
+})
+})
+
 app.use(cors({
     origin: "http://localhost:5173",
     credentials: true
@@ -28,7 +39,19 @@ app.use("/api/v1/auth", authRouter)
 //protected paths
 app.use("/api/v1/user",userRouter)
 app.use("/api/v1/post",postRouter)
-app.use("api/v1/connection",connectionRouter)
+app.use("/api/v1/connection",connectionRouter)
+
+export const userSocketMap=new Map()
+
+
+
+io.on("connection",(socket)=>{
+  socket.on("register",(userId)=>{
+    userSocketMap.set(userId,socket.Id)
+  })
+  socket.on("disconnect",(socket)=>{
+  })
+})
 
 
 
@@ -54,4 +77,4 @@ app.use((err, req, res, next) => {
 });
 
 
-export default app;
+export {app,server,io};

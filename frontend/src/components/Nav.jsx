@@ -61,7 +61,7 @@ function Nav() {
 
     <div className='w-full h-[1px] bg-gray-700 '></div>
 
-     <div className='flex  w-full items-center justify-start text-gray-600 gap-[10px] cursor-pointer' >
+     <div className='flex  w-full items-center justify-start text-gray-600 gap-[10px] cursor-pointer' onClick={()=>{navigate("/network")}}>
         <ImUsers className='w-[23px] h-[23px] text-gray-600'/>
         <div>My Networks</div>
     </div>
@@ -78,7 +78,7 @@ function Nav() {
     </div>
 
     <div className='md:flex flex-col items-center justify-center text-gray-600 hidden cursor-pointer' >
-        <ImUsers className='w-[23px] h-[23px] text-gray-600'/>
+        <ImUsers className='w-[23px] h-[23px] text-gray-600' onClick={()=>{navigate("/network")}}/>
         <div>My Networks</div>
     </div>
      
