@@ -9,7 +9,9 @@ import { userDataContext } from './context/UserContext'
 import Network from './pages/Network'
 
 function App() {
-  const {userData}=useContext(userDataContext)
+  const {userData, loading }=useContext(userDataContext)
+  if (loading) {
+  return <div className="flex items-center justify-center h-screen">Loading...</div>;}
   return (
     <Routes>
       <Route path="/" element={userData?<Home/>:<Navigate to='/login'/>}/>

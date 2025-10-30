@@ -36,7 +36,9 @@ function UserContext({children}) {
     } catch (error) {
       console.log(error);
       setPostData([])
-    }
+    }finally {
+        setLoading(false); 
+      }
   }
 
 

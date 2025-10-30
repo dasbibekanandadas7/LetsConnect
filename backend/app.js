@@ -47,9 +47,16 @@ export const userSocketMap=new Map()
 
 io.on("connection",(socket)=>{
   socket.on("register",(userId)=>{
-    userSocketMap.set(userId,socket.Id)
+    userSocketMap.set(userId,socket.id)
   })
   socket.on("disconnect",(socket)=>{
+    // Find and remove this socket's user from the map
+   for(let [userId, socketId] of userSocketMap.entries()) {
+    if(socketId === socket.id) {
+       userSocketMap.delete(userId)
+       break
+     }
+  }
   })
 })
 

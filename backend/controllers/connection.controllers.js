@@ -8,7 +8,7 @@ import {io,userSocketMap} from "../app.js"
 
 
 const sendConnection=asyncHandler(async(req,res)=>{
-   const{id}=req.params //id of the receiver
+   const {id} =req.params //id of the receiver
    const sender=req.user?._id
 
    const user=await User.findById(sender);
@@ -26,7 +26,7 @@ const sendConnection=asyncHandler(async(req,res)=>{
 
    const existingConnection=await Connection.findOne({
     sender,
-    receriver: id,
+    receiver: id,
     status: "pending"
    })
    if(existingConnection){
@@ -139,7 +139,7 @@ const getConnectionStatus=asyncHandler(async(req,res)=>{
          return res.status(200).json(new apiResponse(200,{status:"pending"},"Pending status"))
     }
     else{
-        return res.status(200).json(new apiResponse(200,{status:"Received", requiestId:pendingRequest._id},"Recerived status"))
+        return res.status(200).json(new apiResponse(200,{status:"received", requiestId:pendingRequest._id},"Recerived status"))
     }
    }
    else{
@@ -191,7 +191,7 @@ const removeConnection=asyncHandler(async(req,res)=>{
 const getConnectionRequests=asyncHandler(async(req,res)=>{
     try {
         const userId=req.user._id
-        const requests=await Connection.find({receiver:userId, status:pending}).populate(
+        const requests=await Connection.find({receiver:userId, status:"pending"}).populate(
             "sender","firstname lastname email username profileImage headline"
         )
 

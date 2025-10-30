@@ -33,7 +33,7 @@ function Nav() {
    <div className='w-full h-[80px] bg-white fixed top-0 left-0 shadow-lg flex md:justify-around  justify-between items-center px-[40px] z-[80]'>
     <div className='flex justify-center items-center gap-[10px]'>
     <div>
-        <img src={logo2} alt="logo" className='w-[50px] ml-[20px]' />
+        <img src={logo2} alt="logo" className='w-[50px] ml-[20px]' onClick={()=>{navigate("/")}}/>
     </div>
     {!activeSearch && <div><IoSearch className='w-[30px] h-[50px] text-gray-600 lg:hidden'  onClick={()=>setActiveSearch(true)}/></div>}
     
@@ -72,13 +72,13 @@ function Nav() {
     
 
 
-    <div className='lg:flex flex-col items-center justify-center cursor-pointer text-gray-600 hidden' >
+    <div className='lg:flex flex-col items-center justify-center cursor-pointer text-gray-600 hidden' onClick={()=>{navigate("/")}} >
     <FaHome className='w-[23px] h-[23px] text-gray-600'/>
     <div>Home</div>
     </div>
 
-    <div className='md:flex flex-col items-center justify-center text-gray-600 hidden cursor-pointer' >
-        <ImUsers className='w-[23px] h-[23px] text-gray-600' onClick={()=>{navigate("/network")}}/>
+    <div className='md:flex flex-col items-center justify-center text-gray-600 hidden cursor-pointer' onClick={()=>{navigate("/network")}}>
+        <ImUsers className='w-[23px] h-[23px] text-gray-600' />
         <div>My Networks</div>
     </div>
      
