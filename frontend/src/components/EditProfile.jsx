@@ -113,6 +113,7 @@ const[backendCoverImage , setBackendCoverImage]=useState(null)
 
 const handleSaveProfile=async()=>{
   setSaving(true)
+
   try {
     let formdata=new FormData()
     formdata.append("firstname",firstname)
@@ -132,7 +133,7 @@ const handleSaveProfile=async()=>{
     }
     for (let [key, value] of formdata.entries()) {
     console.log(key, value);
-}
+    }
 
     let result=await axios.patch(serverurl+"/api/v1/user/updateprofile", formdata, {withCredentials:true})
     console.log("after upload update: ",result.data)
@@ -141,6 +142,7 @@ const handleSaveProfile=async()=>{
     setEdit(false);   
   } catch (error) {
     console.log("Handle saveProfile Error::", error);
+    setSaving(false);
   }
 }
   return (

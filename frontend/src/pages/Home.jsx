@@ -16,8 +16,6 @@ import Post from '../components/Post';
 function Home() {
 
   const{userData, setUserData, edit, setEdit,postData, setPostData}=useContext(userDataContext)
-  console.log("userData::",userData)
-  console.log("postdata::",postData)
   const {serverurl}=useContext(authDataContext)
 
   const[frontendImage, setFrontendImage]=useState("")
@@ -122,11 +120,11 @@ function Home() {
 
   <button className="
     !bg-blue-400 
-    w-[90%] sm:w-[300px] md:w-[350px]   /* ⬅️ responsive widths */
-    h-[45px]                            /* ⬅️ slightly taller for mobile */
+    w-[90%] sm:w-[300px] md:w-[350px]   
+    h-[45px]                           
     !rounded-full border-4 border-blue-400 text-white 
     hover:!bg-blue-600 active:!bg-blue-600
-    my-2 mx-auto                        /* ⬅️ centered horizontally */
+    my-2 mx-auto                       
     flex justify-center items-center gap-2 
     transition-all duration-200
   "

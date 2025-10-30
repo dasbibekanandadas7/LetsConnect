@@ -55,6 +55,7 @@ function Nav() {
     <button
   className="w-[200px] h-[50px] rounded-full border-4 !border-blue-600 !text-white !bg-blue-400 
              !hover:bg-blue-600 !active:bg-blue-600 transition-all duration-200"
+onClick={()=>navigate("/profile")}
 >
   View Profile
 </button>

@@ -202,7 +202,7 @@ const getConnectionRequests=asyncHandler(async(req,res)=>{
     }
 })
 
-const getUserConnections=asyncHandler(async()=>{
+const getUserConnections=asyncHandler(async(req,res)=>{
     try {
         const userId=req.user._id
         const user=await User.findById(userId).populate(

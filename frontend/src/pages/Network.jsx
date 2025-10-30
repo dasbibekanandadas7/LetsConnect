@@ -24,7 +24,7 @@ function Network() {
   const handleAcceptConnection=async(requestId)=>{
     try {
       const result=await axios.put(`${serverurl}/api/v1/connection/accept/${requestId}`,{},{withCredentials: true})
-      console.log("Accept result::",result)
+      setConnections(connections.filter((con)=>con._id==requestId))
     } catch (error) {
       console.log(error);
     }
@@ -33,7 +33,7 @@ function Network() {
    const handleRejectConnection=async(requestId)=>{
     try {
       const result=await axios.put(`${serverurl}/api/v1/connection/reject/${requestId}`,{withCredentials:true})
-      console.log(result)
+      setConnections(connections.filter((con)=>con._id==requestId))
     } catch (error) {
       console.log(error);
     }

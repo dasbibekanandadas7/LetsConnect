@@ -82,7 +82,7 @@ function ConnectionButton({userId}) {
 
   return (
     <button
-  className="w-[160px] h-[50px] !rounded-full border !border-blue-100 !text-blue-600 font-semibold
+  className="w-[160px] h-[50px] !rounded-full border !border-blue-400 !text-blue-600 font-semibold
              hover:!bg-blue-100 hover:!text-black !active:bg-blue-100 !transition-all duration-200" disabled={status=="pending"} onClick={handleClick}> {status || "Connect"} </button>
 
   )

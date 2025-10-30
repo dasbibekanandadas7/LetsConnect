@@ -22,11 +22,14 @@ let education=req.body.education?JSON.parse(req.body.education):[];
 let experience=req.body.experience?JSON.parse(req.body.experience):[];
 
 const user=await User.findById(req.user?._id).select("-password -refreshToken")
+console.log(user);
 let profileImage = user.profileImage;
 let coverImage = user.coverImage;
 
+
 if(req.files?.profileImage?.[0]?.path){
     const profileResult = await uploadOnCloudinary(req.files?.profileImage?.[0]?.path);
+    console.log(profileResult)
     profileImage = profileResult.secure_url; // <-- only the string
 }
 
@@ -35,12 +38,12 @@ if(req.files?.coverImage?.[0]?.path){
     coverImage = coverResult.secure_url; // <-- only the string
 }
 
-if(!profileImage){
-    throw new apiError(501, "Could not upload ProfileImage")
-}
-if(!coverImage){
-     throw new apiError(501, "Could not upload ProfileImage")
-}
+// if(!profileImage){
+//     throw new apiError(501, "Could not upload ProfileImage")
+// }
+// if(!coverImage){
+//      throw new apiError(501, "Could not upload CoverImage")
+// }
 
 const newuser=await User.findByIdAndUpdate(
     req.user?._id,
@@ -56,7 +59,7 @@ const newuser=await User.findByIdAndUpdate(
         education,
         experience,
         profileImage,
-        coverImage
+        coverImage,
       }
     },{
         new:true
