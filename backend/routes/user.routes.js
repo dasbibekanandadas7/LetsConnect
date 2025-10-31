@@ -1,8 +1,7 @@
 import express from "express"
-import {getCurrentUser} from "../controllers/user.controllers.js"
+import {getCurrentUser, getProfile, updateProfile} from "../controllers/user.controllers.js"
 import { verifyJWT } from "../middleware/auth.middleware.js";
 import {upload} from '../middleware/multer.middleware.js';
-import {updateProfile} from "../controllers/user.controllers.js"
 
 const userRouter=express.Router()
 
@@ -18,5 +17,6 @@ userRouter.route("/updateprofile").patch(verifyJWT,
             maxCount: 1
         }
     ]),updateProfile)
+userRouter.route("/profile/:username").get(verifyJWT, getProfile)
 
 export default userRouter;

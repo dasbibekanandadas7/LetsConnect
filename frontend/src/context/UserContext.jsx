@@ -1,6 +1,7 @@
 import React, { createContext, useContext, useEffect, useState } from 'react'
 import { authDataContext } from './AuthContext'
 import axios from 'axios'
+import { useNavigate } from 'react-router-dom'
 
 export const userDataContext=createContext()
 
@@ -11,8 +12,9 @@ function UserContext({children}) {
   const {serverurl}=useContext(authDataContext)
   const [edit, setEdit]=useState(false)
   const[postData, setPostData]=useState([])
+  const[userProfileData, setUserProfileData]=useState({ data: {} })
 
-
+  const navigate=useNavigate()
   const getCurrentUser = async () => {
     try {
       const result = await axios.get(serverurl + "/api/v1/user/currentuser", {
@@ -44,8 +46,22 @@ function UserContext({children}) {
 
   const [loading, setLoading] = useState(true);
 
+  const handlegetProfile=async(username)=>{
+    console.log("username",username)
+    try {
+       const result = await axios.get(serverurl + `/api/v1/user/profile/${username}`, {
+        withCredentials: true 
+      });
+      setUserProfileData(result.data)
+      console.log("result of userProfile::",result);
+      navigate(`/profile/${username}`)
+    } catch (error) {
+      console.log("Unable to fetch user Profile data: ",error);
+    }
+  }
+
 useEffect(() => {
-  getCurrentUser(),
+  getCurrentUser()
   getPost()
   },[]);
 
@@ -60,7 +76,10 @@ useEffect(() => {
       setPostData,
       loading,
       setLoading,
-      getPost
+      getPost,
+      userProfileData,
+      setUserProfileData,
+      handlegetProfile
   }
 
 

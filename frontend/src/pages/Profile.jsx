@@ -9,32 +9,42 @@ import axios from 'axios';
 import { authDataContext } from '../context/AuthContext';
 import EditProfile from '../components/EditProfile';
 import Post from '../components/Post';
+import ConnectionButton from '../components/ConnectionButton';
+import { useParams } from 'react-router-dom';
 
 function Profile() {
-    const{edit,setEdit, userData, setUserData, postData, setPostData}=useContext(userDataContext)
+  const { username } = useParams();
+    const{edit,setEdit, userData, setUserData, postData, setPostData, userProfileData, setUserProfileData,handlegetProfile}=useContext(userDataContext)
     const {serverurl}=useContext(authDataContext)
-    const[userConnection, setUserConnection]=useState([])
-    const[profilePost, setProfilePost]=useState([])
-
-    const handleGetUserConnection=async()=>{
-        try {
-            const result=await axios.get(`${serverurl}/api/v1/connection`,{withCredentials:true})
-            setUserConnection(result.data.data.connection)
-        } catch (error) {
-           console.log(error); 
-        }
-    }
-
-    useEffect(()=>{
-        handleGetUserConnection()
-    },[])
+    console.log("POST::",userProfileData )
     
+    const[profilePost, setProfilePost]=useState([])   
 
-   useEffect(()=>{
-    setProfilePost(postData.filter((post)=>post.author?._id==userData.data._id))
-    console.log("Postdata:", postData)
-    console.log("userdata:",userData);
-   },[])
+   useEffect(() => {
+     if (username) {
+    handlegetProfile(username);
+  }
+}, [username]);
+
+   useEffect(() => {
+  if (postData.length > 0 && userProfileData?.data?._id) {
+    const filteredPosts = postData.filter(
+      (post) => post?.author?._id === userProfileData.data._id
+    );
+    setProfilePost(filteredPosts);
+  }
+}, [postData, userProfileData]);
+
+
+   console.log("profilePost:: ",profilePost)
+   if (!userProfileData?.data?._id) {
+  return (
+    <div className="flex items-center justify-center h-screen text-lg font-semibold">
+      Loading Profile...
+    </div>
+  );
+}
+
 
   return (
     <div className='w-full min-h-screen bg-[#f0efe7] flex flex-col items-center px-2 sm:px-4 md:px-6'>
@@ -46,7 +56,7 @@ function Profile() {
   <div className="relative w-full">
     <div className="w-full h-[250px] bg-gray-300 rounded-lg overflow-hidden relative">
       <img
-        src={userData.data.coverImage || dp}
+        src={userProfileData.data?.coverImage || dp}
         alt="cover"
         className="w-full h-full object-contain object-center bg-gray-200"
       />
@@ -63,7 +73,7 @@ function Profile() {
     >
       <div className="relative w-[100px] h-[100px]">
         <img
-          src={userData.data.profileImage || dp}
+          src={userProfileData.data?.profileImage || dp}
           alt="profile"
           className="w-full h-full object-cover rounded-full border-[4px] border-white shadow-md"
         />
@@ -77,23 +87,24 @@ function Profile() {
   {/* User Info */}
   <div className="flex flex-col items-start mt-[60px] ml-[30px]">
     <h2 className="text-[22px] sm:text-[28px] font-bold text-gray-900 leading-tight">
-      {userData.data.firstname} {userData.data.lastname}
+      {userProfileData.data.firstname} {userProfileData.data.lastname}
     </h2>
     <div className="text-[22px] font-semibold text-black mt-1">
-      {userData.data.headline}
+      {userProfileData.data.headline}
     </div>
     <div className="text-[22px] font-semibold text-black mt-1">
-      {userData.data.location}
+      {userProfileData.data.location}
     </div>
     
     <div className="text-[22px] font-semibold text-black mt-1">
-      {`${userConnection.length} connections`}
+      {`${userProfileData.data.connection.length} connections`}
     </div>
 
   </div>
 
   {/* ✅ Full-width Button */}
-  <div className="w-full mt-8 px-4 sm:px-6">
+
+   {userProfileData.data._id==userData.data._id && <div className="w-full mt-8 px-4 sm:px-6">
     <button
       className="
         w-full
@@ -111,6 +122,9 @@ function Profile() {
       Edit Profile <IoPencil />
     </button>
   </div>
+  }
+  {userProfileData.data._id!=userData.data._id && <div className=' flex items-start ml-[20px] mb-1'> <ConnectionButton userId={userProfileData.data._id}/></div>
+  }
     </div>
 
     <div className='w-full h-[100px] flex items-center p-[20px] text-[22px] text-black-500 font-semibold bg-white mt-2 shadow-2xl'>
@@ -135,7 +149,7 @@ function Profile() {
    
    {/* Skills     */}
    
-  {userData.data.skills.length > 0 && (
+  {userProfileData.data.skills.length > 0 && (
   <div className="w-full flex flex-col bg-white shadow-lg rounded-lg mt-2 mb-4 p-4">
     {/* Skills Row */}
     <div className="flex items-center gap-4 flex-wrap">
@@ -144,7 +158,7 @@ function Profile() {
       </div>
 
       <div className="flex flex-wrap gap-3">
-        {userData.data.skills.map((skill, index) => (
+        {userProfileData.data.skills.map((skill, index) => (
           <span
             key={index}
             className="px-3 py-1 bg-blue-100 text-blue-700 rounded-full shadow-sm text-[16px] font-medium"
@@ -156,18 +170,18 @@ function Profile() {
     </div>
 
     {/* Add Button */}
-    <div className="mt-4 flex justify-start">
+    {userProfileData.data._id==userData.data._id && <div className="mt-4 flex justify-start">
       <button className="w-[20%] h-[40px] !rounded-full !border-2 !border-[#2dc0ff] text-[#1da2d7] font-semibold hover:!bg-[#e6f7ff] transition" onClick={()=>setEdit(true)}>
         Add
       </button>
-    </div>
+    </div>}
   </div>
   )}
 
 
   {/* Education */}
 
-   {userData.data.education.length>0 &&
+   {userProfileData.data.education.length>0 &&
   <div className="w-full flex flex-col items-start bg-white shadow-lg rounded-lg mt-2 mb-4 p-6">
   {/* Title */}
   <div className="text-[22px] font-semibold text-gray-800 mb-4">
@@ -175,8 +189,8 @@ function Profile() {
   </div>
 
   {/* Education Details */}
-  <div className="flex flex-col gap-6">
-    {userData.data.education.map((edu, index) => (
+  <div className="flex flex-col gap-6 items-start text-left">
+    {userProfileData.data.education.map((edu, index) => (
       <div
         key={index}
         className="flex flex-col gap-2 border-b border-gray-200 pb-4"
@@ -193,8 +207,7 @@ function Profile() {
       </div>
     ))}
   </div>
-
-  {/* Add Button */}
+   {userProfileData.data._id==userData.data._id &&
   <div className="mt-6">
     <button
       className="w-[20%] h-[40px] rounded-full border-2 border-[#2dc0ff] text-[#1da2d7] font-semibold hover:bg-[#e6f7ff] transition"
@@ -202,12 +215,12 @@ function Profile() {
     >
       Add
     </button>
-  </div>
+  </div>}
 </div>
    }
     
 
-     {userData.data.experience.length>0 &&
+     {userProfileData.data.experience.length>0 &&
   <div className="w-full flex flex-col items-start bg-white shadow-lg rounded-lg mt-2 mb-4 p-6">
   {/* Title */}
   <div className="text-[22px] font-semibold text-gray-800 mb-4">
@@ -215,8 +228,8 @@ function Profile() {
   </div>
 
   {/* Experience Details */}
-  <div className="flex flex-col gap-6">
-    {userData.data.experience.map((exp, index) => (
+  <div className="flex flex-col gap-6 items-start text-left">
+    {userProfileData.data.experience.map((exp, index) => (
       <div
         key={index}
         className="flex flex-col gap-2 border-b border-gray-200 pb-4"
@@ -235,14 +248,14 @@ function Profile() {
   </div>
 
   {/* Add Button */}
-  <div className="mt-6">
+  {userProfileData.data._id==userData.data._id && <div className="mt-6">
     <button
       className="w-[20%] h-[40px] rounded-full border-2 border-[#2dc0ff] text-[#1da2d7] font-semibold hover:bg-[#e6f7ff] transition"
       onClick={() => setEdit(true)}
     >
       Add
     </button>
-  </div>
+  </div>}
 </div>
    }
 

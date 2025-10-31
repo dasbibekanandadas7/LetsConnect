@@ -38,12 +38,7 @@ if(req.files?.coverImage?.[0]?.path){
     coverImage = coverResult.secure_url; // <-- only the string
 }
 
-// if(!profileImage){
-//     throw new apiError(501, "Could not upload ProfileImage")
-// }
-// if(!coverImage){
-//      throw new apiError(501, "Could not upload CoverImage")
-// }
+
 
 const newuser=await User.findByIdAndUpdate(
     req.user?._id,
@@ -74,10 +69,27 @@ return res.status(200)
 .json(new apiResponse(200, newuser,"Profile updated successfully"))
 })
 
+const getProfile=asyncHandler(async(req,res)=>{
+    try {
+        const {username}=req.params;
+        const user=await User.findOne({username}).select("-password -refreshToken")
+        if(!user){
+            throw new apiError(401, "User not found")
+        }
+
+        return res.status(200)
+        .json(new apiResponse(200,user,"User found successfully"))
+    } catch (error) {
+        throw new apiError(400,"getProfile Error")
+        console.log("getProfile of a user",error);
+    }
+})
+
 
 export{ 
     getCurrentUser,
-    updateProfile,    
+    updateProfile,
+    getProfile    
 }
 
 

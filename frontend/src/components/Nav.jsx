@@ -15,7 +15,7 @@ function Nav() {
   const[activeSearch, setActiveSearch]=useState(false)
   const[showPopup, setShowPopup]=useState(false)
   
-  const {userData, setUserData}=useContext(userDataContext)
+  const {userData, setUserData, handlegetProfile}=useContext(userDataContext)
   const navigate=useNavigate();
 
   const {serverurl}=useContext(authDataContext)
@@ -27,6 +27,15 @@ function Nav() {
     } catch (error) {
       console.log(error)
     }
+  }
+
+  const handleViewProfile=async()=>{
+   try {
+     handlegetProfile(userData.data.username)
+     navigate("/profile")
+   } catch (error) {
+    console.log(error);
+   }
   }
 
   return (
@@ -55,7 +64,7 @@ function Nav() {
     <button
   className="w-[200px] h-[50px] rounded-full border-4 !border-blue-600 !text-white !bg-blue-400 
              !hover:bg-blue-600 !active:bg-blue-600 transition-all duration-200"
-onClick={()=>navigate("/profile")}
+onClick={handleViewProfile}
 >
   View Profile
 </button>
