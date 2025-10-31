@@ -1,5 +1,5 @@
 import express from "express"
-import {getCurrentUser, getProfile, updateProfile} from "../controllers/user.controllers.js"
+import {getCurrentUser, getProfile, getSuggestedUser, search, updateProfile} from "../controllers/user.controllers.js"
 import { verifyJWT } from "../middleware/auth.middleware.js";
 import {upload} from '../middleware/multer.middleware.js';
 
@@ -18,5 +18,7 @@ userRouter.route("/updateprofile").patch(verifyJWT,
         }
     ]),updateProfile)
 userRouter.route("/profile/:username").get(verifyJWT, getProfile)
+userRouter.route("/search").get(verifyJWT, search)
+userRouter.route("/suggestedusers").get(verifyJWT, getSuggestedUser)
 
 export default userRouter;

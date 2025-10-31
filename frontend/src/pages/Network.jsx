@@ -24,7 +24,7 @@ function Network() {
   const handleAcceptConnection=async(requestId)=>{
     try {
       const result=await axios.put(`${serverurl}/api/v1/connection/accept/${requestId}`,{},{withCredentials: true})
-      setConnections(connections.filter((con)=>con._id==requestId))
+      setConnections(connections.filter((con)=>con._id!=requestId))
     } catch (error) {
       console.log(error);
     }
@@ -33,7 +33,7 @@ function Network() {
    const handleRejectConnection=async(requestId)=>{
     try {
       const result=await axios.put(`${serverurl}/api/v1/connection/reject/${requestId}`,{withCredentials:true})
-      setConnections(connections.filter((con)=>con._id==requestId))
+      setConnections(connections.filter((con)=>con._id!=requestId))
     } catch (error) {
       console.log(error);
     }
@@ -48,7 +48,7 @@ function Network() {
   return (
     <div className='w-screen h-[100vh] bg-[#f0efe7] pt-[100px] px-[200px]'>
     <Nav/>
-    <div className='w-full h-[100px] bg-white shadow-lg rounded-lg flex items-cnter p-[10px] text-[22px] text-gray-600'>
+    <div className='w-full h-[80px] bg-white shadow-lg rounded-lg flex items-cnter p-[10px] text-[22px] text-gray-600'>
        Invitations: {connections.length}
     </div>
    {
@@ -91,7 +91,7 @@ function Network() {
       </div>
     </div>
   ))}
-</div>
+    </div>
 
    }
     </div>

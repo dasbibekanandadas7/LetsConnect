@@ -5,6 +5,7 @@ import cookieParser from 'cookie-parser';
 import userRouter from "./routes/user.routes.js";
 import postRouter from "./routes/post.routes.js";
 import connectionRouter from "./routes/connection.routes.js";
+import notificationRouter from "./routes/notification.routes.js";
 
 const app=express();
 
@@ -40,6 +41,7 @@ app.use("/api/v1/auth", authRouter)
 app.use("/api/v1/user",userRouter)
 app.use("/api/v1/post",postRouter)
 app.use("/api/v1/connection",connectionRouter)
+app.use("/api/v1/notification",notificationRouter)
 // app.use("/api/v1/profile",connectionRouter)
 
 export const userSocketMap=new Map()

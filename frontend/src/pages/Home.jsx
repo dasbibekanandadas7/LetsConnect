@@ -12,10 +12,11 @@ import { useRef } from 'react';
 import axios from 'axios';
 import { authDataContext } from '../context/AuthContext';
 import Post from '../components/Post';
+import ConnectionButton from '../components/ConnectionButton';
 
 function Home() {
 
-  const{userData, setUserData, edit, setEdit,postData, setPostData}=useContext(userDataContext)
+  const{userData, setUserData, edit, setEdit,postData, setPostData, handlegetProfile}=useContext(userDataContext)
   const {serverurl}=useContext(authDataContext)
 
   const[frontendImage, setFrontendImage]=useState("")
@@ -23,6 +24,7 @@ function Home() {
   const[description, setDescription]=useState("")
   const[uploadPost, setUploadPost]=useState(false)
   const[posting, setPosting]=useState(false)
+  const[suggestedUser, setSuggestedUser]=useState([])
 
   let image=useRef()
 
@@ -74,6 +76,20 @@ function Home() {
       image.current.value = ""; // clear the file input
     }
   }
+
+  const handleSuggestedUsers=async()=>{
+    try {
+      const result=await axios.get(serverurl+"/api/v1/user/suggestedusers",{withCredentials:true})
+      console.log("SuggestedUser: ",result.data);
+      setSuggestedUser(result.data.data)
+    } catch (error) {
+      
+    }
+  }
+
+  useEffect(()=>{
+    handleSuggestedUsers()
+  },[])
    
   return (
     <div className='w-screen max-w-[100vw] min-h-[100vh] bg-[#f0efe7] pt-[100px] flex items-center lg:items-start justify-center gap-[20px] px-4 lg:px-20 flex-col lg:flex-row relative pb-[50px] pb-[50px]'>
@@ -194,9 +210,64 @@ function Home() {
   </div>
 
   {/* Right sidebar */}
-  <div className='w-full lg:w-[25%] border-4 min-h-[200px] bg-white shadow-lg'>
-    3  asdfghjkl  asdfghjkl  asdfghjkl  asdfghjkl  asdfghjkl  asdfghjkl  asdfghjkl  asdfghjkl  asdfghjkl  asdfghjkl
+  <div className='w-full lg:w-[25%] shadow-lg min-h-[120px] bg-white shadow-lg hidden lg:flex flex-col'>
+    <div className='text-[30px] text-gray-600 font-semibold flex items-start mt-2 ml-2'>Suggested users:</div>
+    <div className='flex flex-col gap-4'>
+      {suggestedUser.length>0 && 
+      <div>
+        {suggestedUser.map((su,index)=>(
+         <div
+  key={su._id || index}
+  className="flex items-center justify-between mt-2 mb-2 px-2 hover:bg-gray-100"
+>
+  {/* Left Section: Profile + Name + Headline */}
+  <div className="flex items-start gap-3">
+    {/* Profile Image */}
+    <div className="w-[40px] h-[40px] rounded-full overflow-hidden ml-2 flex-shrink-0" onClick={()=>handlegetProfile(su.username)}>
+      <img
+        src={su.profileImage || dp}
+        alt=""
+        className="w-full h-full object-cover"
+      />
+    </div>
+
+    {/* Name + Headline */}
+    <div className="flex flex-col min-w-0">
+      {/* Name */}
+      <div className="text-[17px] font-semibold text-gray-800 leading-tight break-words">
+        {`${su.firstname} ${su.lastname}`}
+      </div>
+
+      {/* Headline */}
+      <div className="text-[14px] text-gray-500 font-normal leading-snug truncate">
+        {su.headline}
+      </div>
+    </div>
   </div>
+
+  {/* Right Section: Connection Button */}
+  <div className="mr-3 ml-3 flex-shrink-0">
+    <ConnectionButton userId={su._id} />
+  </div>
+</div>
+
+
+
+        ))}
+      </div>
+      }
+
+       {suggestedUser.length==0 && 
+      <div>
+         No suggested User
+      </div>
+      }
+
+
+    </div>
+  </div>
+
+  
 </div>
 
   )

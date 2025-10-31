@@ -1,4 +1,4 @@
-import React, { useContext } from 'react'
+import React, { useContext, useEffect } from 'react'
 import logo2 from '../assets/logo2.png'
 import { IoSearch } from "react-icons/io5";
 import { FaHome } from "react-icons/fa";
@@ -14,6 +14,8 @@ import axios from 'axios';
 function Nav() {
   const[activeSearch, setActiveSearch]=useState(false)
   const[showPopup, setShowPopup]=useState(false)
+  const[searchInput, setSearchInput]=useState("")
+  const[searchdata, setSearchData]=useState([])
   
   const {userData, setUserData, handlegetProfile}=useContext(userDataContext)
   const navigate=useNavigate();
@@ -38,17 +40,66 @@ function Nav() {
    }
   }
 
+  const handleSearch=async()=>{
+      try {
+        if(searchInput.trim() !== "" ){
+        const result=await axios.get(`${serverurl}/api/v1/user/search?query=${searchInput}`,{withCredentials:true})
+        console.log(result.data.data);
+        setSearchData(result.data.data)}
+      } catch (error) {
+        console.log(error);
+      }
+  }
+
+  useEffect(()=>{
+      handleSearch()
+  },[searchInput])
+
   return (
    <div className='w-full h-[80px] bg-white fixed top-0 left-0 shadow-lg flex md:justify-around  justify-between items-center px-[40px] z-[80]'>
-    <div className='flex justify-center items-center gap-[10px]'>
+    <div className='flex justify-center items-center gap-[10px] relative'>
     <div>
         <img src={logo2} alt="logo" className='w-[50px] ml-[20px]' onClick={()=>{navigate("/")}}/>
     </div>
     {!activeSearch && <div><IoSearch className='w-[30px] h-[50px] text-gray-600 lg:hidden'  onClick={()=>setActiveSearch(true)}/></div>}
     
+     {searchInput.trim() !== "" && searchdata.length>0 && 
+     <div className='absolute top-[65px] left-[0px] lg:left-[20px] w-screen max-w-[500px] bg-white min-h-[60px] shadow-lg flex flex-col gap-[20px]'>
+      {searchdata.map((se,index)=>(
+        <div key={index}>
+         {/* profile pic */}
+        <div className="flex items-center gap-3 cursor-pointer !border-b-1 !border-b-gray-300 p-[10px] hover:bg-gray-200 cursor-pointer rounded-lg" onClick={()=>handlegetProfile(se.username)}>
+  {/* profile image */}
+  <div className="w-[70px] h-[70px] rounded-full overflow-hidden">
+    <img
+      src={se.profileImage || dp}
+      alt=""
+      className="w-full h-full object-cover"
+    />
+  </div>
+
+  {/* name + headline */}
+  <div className="flex flex-col">
+    <div className="text-[21px] font-semibold text-gray-700">
+      {`${se.firstname} ${se.lastname}`}
+    </div>
+    <div className="text-[15px] text-gray-500 mt-[2px]">
+      {se.headline}
+    </div>
+  </div>
+</div>
+
+
+       
+        </div>
+      ))}
+     </div>
+     }
+
+
     <form className={`w-[200px] lg:w-[190px] lg:w-[350px] h-[40px] bg-[#f0efe7] flex items-center gap-[10px] px-[10px] py-[5px] rounded-md ${!activeSearch?"hidden lg:flex":"flex"}`}>
      {activeSearch?"":<div><IoSearch className='w-[30px] h-[22px] text-gray-600'/></div>}
-     <input type="text" className='w-[80%] h-full bg-transparent outline-none  border-0' placeholder='search users...' />
+     <input type="text" value={searchInput} className='w-[80%] h-full bg-transparent outline-none  border-0' placeholder='search users...' onChange={(e)=>setSearchInput(e.target.value)} />
    </form>
     </div>
     
@@ -92,7 +143,7 @@ onClick={handleViewProfile}
         <div>My Networks</div>
     </div>
      
-    <div className='flex flex-col items-center justify-center text-gray-600 cursor-pointer'>
+    <div className='flex flex-col items-center justify-center text-gray-600 cursor-pointer' onClick={()=>navigate("/notification")}>
        <IoMdNotifications className='w-[23px] h-[23px] text-gray-600'/>
        <div className='hidden md:block'>Notifications</div>      
     </div>

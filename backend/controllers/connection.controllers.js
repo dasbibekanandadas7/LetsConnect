@@ -5,6 +5,7 @@ import User from "../models/user.models.js"
 import Connection from "../models/connection.models.js"
 import { connect } from "mongoose"
 import {io,userSocketMap} from "../app.js"
+import Notification from "../models/notification.models.js"
 
 
 const sendConnection=asyncHandler(async(req,res)=>{
@@ -56,6 +57,7 @@ const sendConnection=asyncHandler(async(req,res)=>{
 
 const acceptConnection=asyncHandler(async(req,res)=>{
    const {connectionId}=req.params
+   const userId=req.user?._id
    const connection=await Connection.findById(connectionId)
 
    if(!connection){
@@ -68,6 +70,12 @@ const acceptConnection=asyncHandler(async(req,res)=>{
 
    connection.status="accepted"
    await connection.save()
+
+    let notification=await Notification.create({
+       receiver:connection.sender,
+       type:"connectionAccepted",
+       relatedUser:userId
+      })
 
    await User.findByIdAndUpdate(req.user?._id,{
     $addToSet:{
