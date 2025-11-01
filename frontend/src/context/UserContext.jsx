@@ -6,7 +6,7 @@ import { useNavigate } from 'react-router-dom'
 export const userDataContext=createContext()
 
 import {io} from "socket.io-client"
-export const socket=io("https://letsconnect-backend-pk1b.onrender.com")
+export const socket=io("http://localhost:8000")
 
 function UserContext({children}) {
   

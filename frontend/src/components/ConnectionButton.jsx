@@ -9,7 +9,7 @@ import { userDataContext } from '../context/UserContext'
 import axios from 'axios'
 import { useNavigate } from 'react-router-dom'
 
-const socket=io("https://letsconnect-backend-pk1b.onrender.com")
+const socket=io("http://localhost:8000")
 
 function ConnectionButton({userId}) {
     const {serverurl}=useContext(authDataContext)
