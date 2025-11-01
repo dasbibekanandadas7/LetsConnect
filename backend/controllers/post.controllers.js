@@ -67,12 +67,14 @@ const like=asyncHandler(async(req,res)=>{
    }
    else{
    post.like.push(userId)
+
+   if(post.author.toString() !== userId.toString()){
    let notification=await Notification.create({
     receiver:post.author,
     type:"like",
     relatedUser:userId,
     relatedPost:postId
-   })
+   })}
    }
 
     await post.save(); //updated after change
@@ -103,12 +105,13 @@ const comment=asyncHandler(async(req,res)=>{
     .populate("author", "firstName lastName profileImage headline")
     .populate("comment.user", "firstname lastname profileImage headline")
 
+    if(post.author.toString() !== userId.toString()){
     let notification=await Notification.create({
     receiver:post.author,
     type:"comment",
     relatedUser:userId,
     relatedPost:postId
-   })
+   })}
     
     io.emit("commentEdit",{postId, comm:post.comment})
     console.log(post)

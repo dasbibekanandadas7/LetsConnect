@@ -11,17 +11,16 @@ import axios from 'axios';
 import { authDataContext } from '../context/AuthContext';
 import { AiFillLike } from "react-icons/ai";
 import { LuSendHorizontal } from "react-icons/lu";
-import {io} from "socket.io-client"
+import { socket } from '../context/UserContext';
 import ConnectionButton from './ConnectionButton';
 
-const socket=io("http://localhost:8000")
 
 function Post({id, author, like, comment, description, image, createdAt}) {
   const{userData}=useContext(userDataContext)
   const[more, setMore]=useState(false) //more == true means the description is in deatils. more==false means the desc is less
-  const[likes, setLikes]=useState(like || [])
+  const[likes, setLikes]=useState( [])
   const[commentContent , setCommentContent]=useState("")
-  const[comments, setComments]=useState(comment || [])
+  const[comments, setComments]=useState([])
   const[showComment, setShowComment]=useState(false)
   
   const {serverurl}=useContext(authDataContext)
@@ -31,6 +30,7 @@ function Post({id, author, like, comment, description, image, createdAt}) {
     try {
        const result=await axios.get(serverurl+`/api/v1/post/like/${id}`,{withCredentials:true})
        setLikes(result.data.data.like)
+       getPost()
     } catch (error) {
       console.log(error);
     }
@@ -70,6 +70,10 @@ function Post({id, author, like, comment, description, image, createdAt}) {
     
   },[id])
   
+  useEffect(()=>{
+     setLikes(like)
+     setComments(comment)
+  },[like, comment])
    
   return (
     <div className="w-full min-h-[200px] gap-[10px] bg-white flex flex-col rounded-lg shadow-lg  p-[20px]">
