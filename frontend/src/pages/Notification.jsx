@@ -6,9 +6,13 @@ import { useState } from 'react'
 import axios from 'axios'
 import { useEffect } from 'react'
 import dp from "../assets/dp.webp"
+import { RxCross1 } from "react-icons/rx";
+import { userDataContext } from '../context/UserContext'
 
 function Notification() {
     const {serverurl}=useContext(authDataContext)
+    const{userData}=useContext(userDataContext)
+    console.log("userData in notification:",userData)
     const[notificationData, setNotificationData]=useState([])
 
     const handleNotification=async()=>{
@@ -19,6 +23,26 @@ function Notification() {
         } catch (error) {
             console.log("handleNotification Error", error);
         }
+    }
+
+    const handledeleteSingleNotification=async(id)=>{
+       try {
+        const result=await axios.delete(`${serverurl}/api/v1/notification/deleteone/${id}`,{withCredentials:true})
+        console.log(result)
+        await handleNotification()
+       } catch (error) {
+        console.log("handledeleteSingleNotification error",error)
+       }
+    }
+
+    const handledeleteAllNotification=async()=>{
+      try {
+          const result=await axios.delete(`${serverurl}/api/v1/notification`,{withCredentials:true})
+          console.log(result)
+          await handleNotification()
+      } catch (error) {
+        console.log("handledeleteAllNotification error: ",error)
+      }
     }
 
    function handleMessage(type){
@@ -40,9 +64,16 @@ function Notification() {
   return (
     <div className='w-screen h-[100vh] bg-[#f0efe7] pt-[100px] px-[200px]'>
       <Nav/>
-      <div className='w-full h-[80px] bg-white shadow-lg rounded-lg flex items-cnter p-[10px] text-[22px] text-gray-600'>
-       Notifications: {notificationData.length}
-    </div>
+     <div className="w-full h-[80px] bg-white shadow-lg rounded-lg flex items-center justify-between p-[16px] text-[22px] text-gray-600">
+  <span>Notifications: {notificationData.length}</span>
+
+  {notificationData.length>0 && 
+
+  <button className="bg-gray-100 !border-1 !border-blue-400 hover:!bg-gray-300 text-blue-800 text-[16px] px-4 py-2 rounded-md transition" onClick={handledeleteAllNotification}>
+    Clear All
+  </button> }
+</div>
+
 
     {
         notificationData.length>0 &&
@@ -50,8 +81,9 @@ function Notification() {
           {notificationData.map((notify, index) => (
             <div
               key={index}
-              className="w-full max-w-[1000%] flex items-center justify-between mt-6 p-4 bg-white rounded-xl shadow-sm hover:shadow-md transition"
+              className="relative w-full  max-w-screen flex flex-col items-start justify-between mt-6 p-4 bg-white rounded-xl shadow-sm hover:shadow-md transition"
             >
+            <RxCross1 className='absolute top-2 right-2 w-[20px] h-[20px] text-gray-800 cursor-pointer hover:text-red-500 transition' onClick={()=>handledeleteSingleNotification(notify._id)} />
             <div>
               {/* Profile image and name */}
               <div className="flex items-center gap-4">
@@ -71,17 +103,28 @@ function Notification() {
               </div>
 
              {notify.relatedPost &&
-             <div>
-             {notify.relatedPost.image &&
-                <div>
-                    <img src={notify.relatedPost.image} alt="" />
-                </div>}
+             <div className="flex flex-col items-center border rounded-lg p-3 bg-gray-50 shadow-sm ml-[110px] w-full overflow-hidden">
+  {/* Image Box */}
+  {notify.relatedPost.image && (
+    <div className="w-[180px] h-[120px] overflow-hidden rounded-md mb-2">
+      <img
+        src={notify.relatedPost.image}
+        alt=""
+        className="w-full h-full object-cover"
+      />
+    </div>
+  )}
 
-             {notify.relatedPost.description &&
-                <div>
-                     {notify.relatedPost.description} 
-                </div>}
-             </div>
+  {/* Description Box */}
+  {notify.relatedPost.description && (
+    <div className="text-sm text-gray-700 text-center w-[1300px] overflow-hidden">
+      {notify.relatedPost.description}
+    </div>
+  )}
+</div>
+
+
+
              }
 
               </div>

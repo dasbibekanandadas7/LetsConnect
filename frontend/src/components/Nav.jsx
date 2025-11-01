@@ -143,10 +143,14 @@ onClick={handleViewProfile}
         <div>My Networks</div>
     </div>
      
-    <div className='flex flex-col items-center justify-center text-gray-600 cursor-pointer' onClick={()=>navigate("/notification")}>
-       <IoMdNotifications className='w-[23px] h-[23px] text-gray-600'/>
-       <div className='hidden md:block'>Notifications</div>      
-    </div>
+    <div 
+  className='hidden lg:flex flex-col items-center justify-center text-gray-600 cursor-pointer' 
+  onClick={()=>navigate("/notification")}
+>
+  <IoMdNotifications className='w-[23px] h-[23px] text-gray-600'/>
+  <div className='hidden xl:block'>Notifications</div>      
+</div>
+
 
     <div className='w-[50px] h-[50px] rounded-full overflow-hidden cursor-pointer' onClick={()=>setShowPopup(prev=>!prev)} >
         <img src={userData.data.profileImage || dp} alt="" className='w-full h-full' />

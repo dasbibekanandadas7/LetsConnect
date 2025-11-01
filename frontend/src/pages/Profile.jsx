@@ -48,7 +48,7 @@ function Profile() {
 
   return (
     <div className='w-full min-h-screen bg-[#f0efe7] flex flex-col items-center px-2 sm:px-4 md:px-6'>
-    <Nav className='mb-2'/>8
+    <Nav className='mb-2'/>
     {edit && <EditProfile/>}
 
     <div className="w-screen min-h-[55vh] max-w-[1000px] mt-[80px] mx-auto bg-white rounded-lg shadow-sm flex flex-col gap-[10px]">
@@ -91,6 +91,9 @@ function Profile() {
     </h2>
     <div className="text-[22px] font-semibold text-black mt-1">
       {userProfileData.data.headline}
+    </div>
+    <div className="text-[22px] font-semibold text-black mt-1">
+      {userProfileData.data.gender}
     </div>
     <div className="text-[22px] font-semibold text-black mt-1">
       {userProfileData.data.location}

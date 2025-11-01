@@ -61,6 +61,7 @@ const newuser=await User.findByIdAndUpdate(
     }
 ).select("-password -refreshToken")
 
+console.log("newuser:", newuser);
 if(!newuser){
     throw new apiError(501, "Update Unsucessful")
 }

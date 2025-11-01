@@ -121,6 +121,7 @@ const handleSaveProfile=async()=>{
     formdata.append("username",username)
     formdata.append("headline",headline)
     formdata.append("location",location)
+    formdata.append("gender", gender.toLowerCase());
     formdata.append("skills",JSON.stringify(skills))
     formdata.append("education",JSON.stringify(education))
     formdata.append("experience",JSON.stringify(experience))
@@ -170,7 +171,7 @@ const handleSaveProfile=async()=>{
             <input type="text" placeholder='lastname'  value={lastname} onChange={(e)=>setLastName(e.target.value)} className='w-full h-[50px] outline-none border-gray-600 px-[10px] py-[5px] text-[16px] border-2 rounded-lg placeholder-gray-400'/>
             <input type="text" placeholder='username'  value={username} onChange={(e)=>setUserName(e.target.value)}  className='w-full h-[50px] outline-none border-gray-600 px-[10px] py-[5px] text-[16px] border-2 rounded-lg placeholder-gray-400'/>
             <input type="text" placeholder='headline'  value={headline} onChange={(e)=>setHeadline(e.target.value)} className='w-full h-[50px] outline-none border-gray-600 px-[10px] py-[5px] text-[16px] border-2 rounded-lg placeholder-gray-400'/>
-            <input type="text" placeholder='location'  value={location} onChange={(e)=>setLocation(e.target.value)}className='w-full h-[50px] outline-none border-gray-600 px-[10px] py-[5px] text-[16px] border-2 rounded-lg placeholder-gray-400'/>
+            <input type="text" placeholder='location'  value={location} onChange={(e)=>setLocation(e.target.value)} className='w-full h-[50px] outline-none border-gray-600 px-[10px] py-[5px] text-[16px] border-2 rounded-lg placeholder-gray-400'/>
             <input type="text" placeholder='gender (Male/Female/Others)'  value={gender} onChange={(e)=>setGender(e.target.value)} className='w-full h-[50px] outline-none border-gray-600 px-[10px] py-[5px] text-[16px] border-2 rounded-lg placeholder-gray-400'/>
         
            <div className="w-full p-[10px] border-2 border-gray-600 flex flex-col gap-[10px] rounded-lg">
