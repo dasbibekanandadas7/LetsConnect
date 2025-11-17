@@ -20,7 +20,6 @@ const generateAccessAndRefreshTokens=async(userId)=>{
 }
 
 const signUp=asyncHandler(async(req,res)=>{
-    console.log(req.body)
    const {firstname, lastname, username, email, password}=req.body
    if(
         [firstname,lastname,username,email,password].some((field)=> field?.trim()==="")
@@ -52,12 +51,13 @@ const signUp=asyncHandler(async(req,res)=>{
      
     const {accessToken,refreshToken} = await generateAccessAndRefreshTokens(createuser?._id);
 
-    const options = {
-    httpOnly: true,
-    secure: process.env.NODE_ENV === "production",
-    sameSite: "strict",
-    maxAge: 7 * 24 * 60 * 60 * 1000 // 7 days
-    };
+    const isProduction = process.env.NODE_ENV === "production";
+    const options={
+         httpOnly: true,
+        secure: isProduction,
+        sameSite: isProduction?"none":"lax",
+        maxAge: 7 * 24 * 60 * 60 * 1000 
+    }
     res.clearCookie("token");
 
     return res.status(200)
@@ -85,10 +85,11 @@ const login=asyncHandler(async(req,res)=>{
     const{accessToken, refreshToken}=await generateAccessAndRefreshTokens(user._id);
     const loggedInUser=await User.findById(user._id).select("-password -refreshToken");
 
+   const isProduction = process.env.NODE_ENV === "production";
     const options={
          httpOnly: true,
-        secure: process.env.NODE_ENV === "production",
-        sameSite: "strict",
+        secure: isProduction,
+        sameSite: isProduction?"none":"lax",
         maxAge: 7 * 24 * 60 * 60 * 1000 
     }
 
