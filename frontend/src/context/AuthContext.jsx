@@ -2,7 +2,7 @@ import React, { createContext } from 'react'
 export const authDataContext=createContext()
 
 function AuthContext({children}) {
-    const serverurl="http://localhost:8000"
+    const serverurl="https://letsconnect-fullstack-backend.onrender.com"
     const value={
        serverurl
     }
